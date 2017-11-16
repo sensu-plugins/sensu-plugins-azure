@@ -1,0 +1,36 @@
+sudo: true
+service: docker
+language: ruby
+cache:
+- bundler
+before_install:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
+  - gem install bundler -v 1.15
+install:
+- bundle install
+rvm:
+- 2.1
+- 2.2
+- 2.3.0
+- 2.4.1
+notifications:
+  email:
+    recipients:
+    - sensu-plugin@sensu-plugins.io
+    on_success: change
+    on_failure: always
+script:
+- gem build sensu-plugins-azure.gemspec
+- gem install sensu-plugins-azure-*.gem
+- bundle exec rake quick
+- bundle exec rake kitchen:ruby-`echo $TRAVIS_RUBY_VERSION | sed -e "s/\.//g"`-debian-8
+deploy:
+  provider: rubygems
+  api_key:
+    secure: VPjAKRl1ehqSrMnU7Qub7DG2NxtmAw8OvIVpF7WvZzV9aCLgc5iCblibCCfs/vePb9kMfIo3ubdcannXTJpdhOIqA3H9fM7PomgRgkU7VbZYO8yoH3Q6+r31m4xsxnaVN+Uh9Vv24faNLbZOt4Jxydx5a2o8IvykTBfg8oVoRvx6hzGV2dMCG6g70h8tOu2woc8MXk5EhkwRMRtcv/0MNbWNHHuMlSpH4zt2ak2SL5Jug63KGdN5GVvtcL5PEqE4LFk4rGqoMgB6l60uJ2p6hHxA0qjEeFksDKAqldWKzCJpJHXnfLetawjHdtaNg2T/Zru+dzN8VJ85GtV7madu/Fzn7oOZxXnX8ANPVFNJA5ehO1IIAjLcrvPsi40aVO+Yi4Vfo1woT7rQ6KPdgwSZq88gN3yhxNRuFxYlZw8VHmmS1tY1Hdy1QvERFzizH6iWN5MlhY+4J6Qay7mKmIbXekamqBNRzIsfaAEFgCKjGWZE9IIOkS9kJ0F6fL3qRPBCqo9GNIlKKbXeFfaE+Uw33qYUlCbTAXUyqvS7bU0HfAvV4f2qtbfKE0xFpOMnmHYm4PmoO1gRUfPT0wOGUt/OK+qFBr3cacpWCoLJXW5x7SCgo8odjI5CtJFK3KWvEjdRi8oIabOolIbr0kGG8HKY8megj7c/bhK+tO25m6DYWiQ=
+  gem: sensu-plugins-azure
+  on:
+    tags: true
+    all_branches: true
+    rvm: 2.4.1
+    repo: sensu-plugins/sensu-plugins-azure
