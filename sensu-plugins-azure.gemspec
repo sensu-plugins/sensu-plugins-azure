@@ -39,7 +39,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rake',                      '~> 12.0'
   s.add_development_dependency 'redcarpet',                 '~> 3.2'
   s.add_development_dependency 'rspec',                     '~> 3.4'
-  s.add_development_dependency 'rubocop',                   '~> 0.49.0'
+  s.add_development_dependency 'rubocop',                   '~> 0.50.0'
   # intentionally locked as 1.17 requires ruby 2.3+
   s.add_development_dependency 'test-kitchen',              '~> 1.16.0'
   s.add_development_dependency 'yard',                      '~> 0.8'
